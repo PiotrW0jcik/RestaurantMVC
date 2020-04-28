@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Podsumowanie</h2>
+
+
+
+@using PiotrWojcik.Restaurant.Models;
+
+<h3>Zamówienia dla @Session["table"] </h3>
+<table class="table table-striped">
+    <tr>
+        <th>Nazwa Dania</th>
+        <th>Cena</th>
+        <th>Ilość</th>
+        <th>Cena całkowita</th>
+    </tr>
+    @foreach (Item item in (List<Item>)Session[$"order{(int)Session["table"]}"])
+    {
+        <tr>
+            <td>@item.Dish.Name</td>
+            <td>@item.Dish.Price</td>
+            <td>@item.Quantity</td>
+            <td>@(item.Dish.Price * item.Quantity)</td>
+        </tr>
+    }
+    <tr>
+
+        <td align="right" colspan="5">Napiwek 5%</td>
+        <td>
+            @{
+                List<Item> orderTip = (List<Item>)Session[$"order{(int)Session["table"]}"];
+                var tip = orderTip.Sum(item => item.Dish.Price * item.Quantity*0.05);
+            }
+            @tip
+        </td>
+
+
+    </tr>
+    <tr>
+
+        <td align="right" colspan="5">Suma</td>
+        <td>
+            @{
+                List<Item> order = (List<Item>)Session[$"order{(int)Session["table"]}"];
+                var total = order.Sum(item => item.Dish.Price * item.Quantity + tip);
+            }
+            @total
+            <br />
+        </td>
+
+
+    </tr>
+</table>
+<br>
+<br />
+<a href="@Url.Action("RemoveAllOrder", "Order")">Usuń zamówienie</a>
+<br />
+<a href="@Url.Action("Index", "Table")">Powrót do listy stolików</a>

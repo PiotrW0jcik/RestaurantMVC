@@ -1,0 +1,69 @@
+﻿@using Microsoft.Ajax.Utilities
+@using PiotrWojcik.Restaurant.Models
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h3>Lista Stolików</h3>
+<table class="table table-striped">
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <td align="center">Dodaj zamówienie </td>
+    </tr>
+    @foreach (Table table in ViewBag.tables)
+    {
+        <tr>
+            <td>@table.Id</td>
+            <td>@table.Name</td>
+
+            <td align="center">
+                <a href="@Url.Action("AddOrderToTable", "Dish", new { id = table.Id })">Dodaj</a>
+            </td>
+        </tr>
+    }
+
+</table>
+<br />
+<h3>Aktualne zamówienia</h3>
+<table class="table table-striped">
+    <tr>
+        <th>Nr stolika</th>
+        <th>Łączna kwota zamówienia</th>
+        <th></th>
+        <th></th>
+
+    </tr>
+    @for (int i = 1; i < 6; i++)
+    {
+
+        if (Session[$"order{i}"] != null)
+        {
+            Session["table"] = i;
+            {
+                List<Item> order = (List<Item>) Session[$"order{i}"];
+                var total = order.Sum(item => item.Dish.Price * item.Quantity);
+                if (total != 0)
+                {
+                    <tr>
+                        <td>
+                            @i
+                        </td>
+                        <td>
+                            @total
+                        </td>
+                        <td></td>
+                        <td>
+                            <a href="@Url.Action("EditOrder", "Order",new { id = i})">Edytuj</a>
+                            <a href="@Url.Action("RemoveAllOrder", "Order",new { id = i})">Usuń</a>
+                        </td>
+                    </tr>
+                }
+            }
+        }
+    }
+</table>
+
+
+
