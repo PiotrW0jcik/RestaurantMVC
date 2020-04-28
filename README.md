@@ -1,2 +1,3 @@
 # RestaurantMVC
- Simple Restaurant app for recruitment purposes
+ Simple Restaurant app for recruitment purposes.
+ Data stored in the session.
